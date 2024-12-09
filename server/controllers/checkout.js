@@ -41,26 +41,13 @@ module.exports = {
                 cancel_url: `${stripeSettings.checkoutCancelUrl}`,
                 customer_email: userEmail,
                 metadata: {
-                    test: 'aaaaaa',
-                    // productId, // ID продукта
-                    // orderId, // ID заказа
-                    // options: options ? options.join(', ') : '', // Динамические опции (если есть)
-                },
-                metaData: {
-                    test: 'bbbb',
-                    // productId, // ID продукта
-                    // orderId, // ID заказа
-                    // options: options ? options.join(', ') : '', // Динамические опции (если есть)
-                },
-                meta: {
-                    test: 'CCCC',
-                    // productId, // ID продукта
-                    // orderId, // ID заказа
-                    // options: options ? options.join(', ') : '', // Динамические опции (если есть)
+                    productId, // ID продукта
+                    orderId, // ID заказа
+                    options: options ? options.join(', ') : '', // Динамические опции (если есть)
                 },
             });
 
-            ctx.send({ sessionId: session.id, url: session.url });
+            ctx.send({ sessionId: session.id, url: session.url, metadata: JSON.stringify(metadata) });
         } catch (error) {
             strapi.log.error('Stripe Error:', error);
             ctx.internalServerError('Unable to create dynamic price session');
