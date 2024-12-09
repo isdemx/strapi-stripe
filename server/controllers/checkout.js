@@ -6,10 +6,11 @@ const { ApplicationError } = require('@strapi/utils').errors;
 module.exports = {
     async dynamicCheckout(ctx) {
         try {
-            const { productId, options, finalPrice, userEmail } = ctx.request.body;
+            const { productId, options, finalPrice, userEmail, orderId } = ctx.request.body;
 
-            if (!productId || !finalPrice || !userEmail) {
-                return ctx.badRequest('Product ID, final price, and user email are required');
+            // Проверяем обязательные параметры
+            if (!productId || !finalPrice || !userEmail || !orderId) {
+                return ctx.badRequest('Product ID, final price, user email, and order ID are required');
             }
 
             // Инициализация Stripe с использованием ключа из конфигурации
@@ -39,6 +40,11 @@ module.exports = {
                 success_url: `${stripeSettings.checkoutSuccessUrl}?sessionId={CHECKOUT_SESSION_ID}`,
                 cancel_url: `${stripeSettings.checkoutCancelUrl}`,
                 customer_email: userEmail,
+                metadata: {
+                    productId, // ID продукта
+                    orderId, // ID заказа
+                    options: options ? options.join(', ') : '', // Динамические опции (если есть)
+                },
             });
 
             ctx.send({ sessionId: session.id, url: session.url });
@@ -46,5 +52,6 @@ module.exports = {
             strapi.log.error('Stripe Error:', error);
             ctx.internalServerError('Unable to create dynamic price session');
         }
-    },
+    }
+
 };
