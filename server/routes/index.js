@@ -109,6 +109,14 @@ module.exports = [
   },
   {
     method: 'POST',
+    path: '/checkout',
+    handler: 'checkout.checkout',
+    config: {
+      auth: false,
+    },
+  },
+  {
+    method: 'POST',
     path: '/webhook',
     handler: 'stripeController.webhookHandler',
     config: {
