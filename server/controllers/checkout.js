@@ -41,6 +41,7 @@ module.exports = {
                 cancel_url: `${stripeSettings.checkoutCancelUrl}`,
                 customer_email: userEmail,
                 metadata: {
+                    test: 'aaaaaa',
                     productId, // ID продукта
                     orderId, // ID заказа
                     options: options ? options.join(', ') : '', // Динамические опции (если есть)
