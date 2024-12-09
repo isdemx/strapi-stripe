@@ -137,7 +137,8 @@ module.exports = ({ strapi }) => ({
     isSubscription,
     productId,
     productName,
-    userEmail
+    userEmail,
+    orderId // Передаём orderId в качестве аргумента
   ) {
     try {
       const stripeSettings = await this.initialize();
@@ -156,19 +157,17 @@ module.exports = ({ strapi }) => ({
         priceId = stripePriceId;
         paymentMode = 'payment';
       }
-
+  
       const price = await stripe.prices.retrieve(priceId);
-      //payment Methods
+  
       const PaymentMethods = await strapi
         .plugin('strapi-stripe')
         .service('paymentMethodService')
         .getPaymentMethods(isSubscription, price.currency, stripeSettings.paymentMethods);
-
-      // Create Checkout Sessions.
+  
       const session = await stripe.checkout.sessions.create({
         line_items: [
           {
-            // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
             price: priceId,
             quantity: 1,
           },
@@ -181,14 +180,16 @@ module.exports = ({ strapi }) => ({
         cancel_url: `${stripeSettings.checkoutCancelUrl}`,
         metadata: {
           productId: `${productId}`,
+          orderId: `${orderId}`, // Передаём orderId в metadata
           productName: `${productName}`,
         },
       });
+  
       return session;
     } catch (error) {
       throw new ApplicationError(error.message);
     }
-  },
+  },  
   async retrieveCheckoutSession(checkoutSessionId) {
     try {
       const stripeSettings = await this.initialize();

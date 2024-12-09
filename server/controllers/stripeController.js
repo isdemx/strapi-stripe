@@ -225,44 +225,24 @@ module.exports = {
     let event;
 
     try {
-      // Проверяем подпись Stripe
-      event = stripe.webhooks.constructEvent(
-        ctx.request.body,
-        sig,
-        endpointSecret
-      );
+      event = stripe.webhooks.constructEvent(ctx.request.body, sig, endpointSecret);
     } catch (err) {
       strapi.log.error(`Webhook signature verification failed: ${err.message}`);
       return ctx.badRequest('Webhook signature verification failed');
     }
 
-    // Обрабатываем событие
     try {
       switch (event.type) {
         case 'checkout.session.completed':
-          // Сессия успешно завершена
           const session = event.data.object;
 
-          // Логика обработки успешного платежа
-          await strapi.query('plugin::strapi-stripe.ss-payment').create({
-            data: {
-              transactionId: session.id,
-              txnAmount: session.amount_total / 100,
-              txnDate: new Date(),
-              customerName: session.customer_details.name,
-              customerEmail: session.customer_details.email,
-              isTxnSuccessful: true,
-              stripeProduct: session.metadata.productId,
-            },
+          // Обновляем статус заказа в Strapi
+          const orderId = session.metadata.orderId; // Передайте orderId через metadata
+          await strapi.entityService.update('api::order.order', orderId, {
+            data: { status: 'payed' },
           });
 
-          strapi.log.info(`Payment successful for session: ${session.id}`);
-          break;
-
-        case 'payment_intent.succeeded':
-          // Обрабатываем успешный платеж
-          const paymentIntent = event.data.object;
-          strapi.log.info(`PaymentIntent was successful: ${paymentIntent.id}`);
+          strapi.log.info(`Order ${orderId} updated to 'payed'`);
           break;
 
         default:
@@ -274,5 +254,6 @@ module.exports = {
       strapi.log.error(`Webhook handler failed: ${err.message}`);
       ctx.internalServerError('Webhook handler error');
     }
-  },
+  }
+
 };
