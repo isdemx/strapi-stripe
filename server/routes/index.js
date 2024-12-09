@@ -99,4 +99,12 @@ module.exports = [
       auth: false,
     },
   },
+  {
+    method: 'POST',
+    path: '/dynamicCheckout',
+    handler: 'checkout.dynamicCheckout',
+    config: {
+      auth: false,
+    },
+  },
 ];
