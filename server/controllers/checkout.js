@@ -10,7 +10,7 @@ module.exports = {
 
             // Проверяем обязательные параметры
             if (!productId || !finalPrice || !userEmail || !orderId) {
-                return ctx.badRequest('Product ID, final price, user email, and order ID are required');
+                return ctx.badRequest('Product IDDD, final price, user email, and order ID are required');
             }
 
             // Инициализация Stripe с использованием ключа из конфигурации
