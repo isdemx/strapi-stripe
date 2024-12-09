@@ -47,7 +47,7 @@ module.exports = {
                 },
             });
 
-            ctx.send({ sessionId: session.id, url: session.url, metadata: JSON.stringify(metadata) });
+            ctx.send({ sessionId: session.id, url: session.url, metadata: JSON.stringify(session.metadata) });
         } catch (error) {
             strapi.log.error('Stripe Error:', error);
             ctx.internalServerError('Unable to create dynamic price session');
