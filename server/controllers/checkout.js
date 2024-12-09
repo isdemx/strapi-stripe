@@ -42,9 +42,21 @@ module.exports = {
                 customer_email: userEmail,
                 metadata: {
                     test: 'aaaaaa',
-                    productId, // ID продукта
-                    orderId, // ID заказа
-                    options: options ? options.join(', ') : '', // Динамические опции (если есть)
+                    // productId, // ID продукта
+                    // orderId, // ID заказа
+                    // options: options ? options.join(', ') : '', // Динамические опции (если есть)
+                },
+                metaData: {
+                    test: 'bbbb',
+                    // productId, // ID продукта
+                    // orderId, // ID заказа
+                    // options: options ? options.join(', ') : '', // Динамические опции (если есть)
+                },
+                meta: {
+                    test: 'CCCC',
+                    // productId, // ID продукта
+                    // orderId, // ID заказа
+                    // options: options ? options.join(', ') : '', // Динамические опции (если есть)
                 },
             });
 
