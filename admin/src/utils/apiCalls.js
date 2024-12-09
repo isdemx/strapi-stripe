@@ -1,6 +1,6 @@
 import createInstance from './axiosInstance';
 
-const baseURL = process.env.STRAPI_ADMIN_BACKEND_URL;
+const baseURL = 'https://api.effidocs.cy' // process.env.STRAPI_ADMIN_BACKEND_URL;
 
 export async function saveStripeConfiguration(data, apiToken) {
   const axios = createInstance(apiToken);

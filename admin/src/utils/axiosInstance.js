@@ -7,7 +7,7 @@ import axios from 'axios';
 
 const createInstance = apiToken => {
   const instance = axios.create({
-    baseURL: process.env.STRAPI_ADMIN_BACKEND_URL,
+    baseURL: 'https://api.effidocs.cy' //process.env.STRAPI_ADMIN_BACKEND_URL,
   });
 
   instance.interceptors.request.use(
