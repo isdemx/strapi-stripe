@@ -107,4 +107,13 @@ module.exports = [
       auth: false,
     },
   },
+  {
+    method: 'POST',
+    path: '/webhook',
+    handler: 'stripeController.webhookHandler',
+    config: {
+      auth: false, // Stripe не будет отправлять токен авторизации
+    },
+  },
+
 ];

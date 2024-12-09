@@ -216,4 +216,63 @@ module.exports = {
       console.error(error);
     }
   },
+
+  async webhookHandler(ctx) {
+    const stripe = 'sk_test_51Q8LRfL84qGzWPfNbverpICdllcx7UIY46q700MLkatb1f8YoQXDMIM4Rl3vYgDUBhBNwA59LkxvW9gYnsvsaI7K008nC8g2Ez'; // new Stripe(process.env.STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY);
+    const endpointSecret = 'we_1QUCM2L84qGzWPfNwATzpGgl'; // process.env.STRIPE_WEBHOOK_SECRET; // Добавьте этот секрет в .env
+
+    const sig = ctx.request.headers['stripe-signature'];
+    let event;
+
+    try {
+      // Проверяем подпись Stripe
+      event = stripe.webhooks.constructEvent(
+        ctx.request.body,
+        sig,
+        endpointSecret
+      );
+    } catch (err) {
+      strapi.log.error(`Webhook signature verification failed: ${err.message}`);
+      return ctx.badRequest('Webhook signature verification failed');
+    }
+
+    // Обрабатываем событие
+    try {
+      switch (event.type) {
+        case 'checkout.session.completed':
+          // Сессия успешно завершена
+          const session = event.data.object;
+
+          // Логика обработки успешного платежа
+          await strapi.query('plugin::strapi-stripe.ss-payment').create({
+            data: {
+              transactionId: session.id,
+              txnAmount: session.amount_total / 100,
+              txnDate: new Date(),
+              customerName: session.customer_details.name,
+              customerEmail: session.customer_details.email,
+              isTxnSuccessful: true,
+              stripeProduct: session.metadata.productId,
+            },
+          });
+
+          strapi.log.info(`Payment successful for session: ${session.id}`);
+          break;
+
+        case 'payment_intent.succeeded':
+          // Обрабатываем успешный платеж
+          const paymentIntent = event.data.object;
+          strapi.log.info(`PaymentIntent was successful: ${paymentIntent.id}`);
+          break;
+
+        default:
+          strapi.log.warn(`Unhandled event type: ${event.type}`);
+      }
+
+      ctx.send({ received: true });
+    } catch (err) {
+      strapi.log.error(`Webhook handler failed: ${err.message}`);
+      ctx.internalServerError('Webhook handler error');
+    }
+  },
 };
