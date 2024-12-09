@@ -9,8 +9,8 @@ const Stripe = require('stripe');
 const { ApplicationError } = require('@strapi/utils').errors;
 const axiosInstance = require('axios');
 
-const liveStripeKey = process.env.STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY;
-const testStripeKey = process.env.STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY;
+const liveStripeKey = 'xxx'; // process.env.STRAPI_ADMIN_LIVE_STRIPE_SECRET_KEY;
+const testStripeKey = 'sk_test_51Q8LRfL84qGzWPfNbverpICdllcx7UIY46q700MLkatb1f8YoQXDMIM4Rl3vYgDUBhBNwA59LkxvW9gYnsvsaI7K008nC8g2Ez'; //process.env.STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY;
 
 module.exports = ({ strapi }) => ({
   async initialize() {
