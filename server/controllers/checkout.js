@@ -76,7 +76,7 @@ module.exports = {
                 line_items: [
                     {
                         price_data: {
-                            currency: 'usd', // Укажите нужную валюту
+                            currency: 'eur', // Укажите нужную валюту
                             product_data: {
                                 name: `Custom Product ${productId}`,
                                 description: `Dynamic options: ${options ? options.join(', ') : ''}`,
@@ -91,10 +91,8 @@ module.exports = {
                 cancel_url: `${stripeSettings.checkoutCancelUrl}`,
                 customer_email: userEmail,
                 metadata: {
-                    testt: 'test',
                     productId, // ID продукта
                     orderId, // ID заказа
-                    options: options ? options.join(', ') : '', // Динамические опции (если есть)
                 },
             });
 
