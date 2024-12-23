@@ -219,7 +219,7 @@ module.exports = {
 
   async webhookHandler(ctx) {
     const stripe = 'sk_test_51Q8LRfL84qGzWPfNbverpICdllcx7UIY46q700MLkatb1f8YoQXDMIM4Rl3vYgDUBhBNwA59LkxvW9gYnsvsaI7K008nC8g2Ez'; // new Stripe(process.env.STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY);
-    const endpointSecret = 'we_1QUCM2L84qGzWPfNwATzpGgl'; // process.env.STRIPE_WEBHOOK_SECRET; // Добавьте этот секрет в .env
+    const endpointSecret = 'whsec_MPEUAR8TYHeGAkactutzKILWDP6dHD4t'; // process.env.STRIPE_WEBHOOK_SECRET; // Добавьте этот секрет в .env
 
     const sig = ctx.request.headers['stripe-signature'];
     let event;
